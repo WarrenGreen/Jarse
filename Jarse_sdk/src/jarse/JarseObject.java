@@ -37,10 +37,12 @@ public class JarseObject {
 					+ "user=" + Jarse.getUsername() + "&password="
 					+ Jarse.getPassword());
 
-			if(countRows() > 0) {
-				update();
-			} else {
+			String id = getObjectId();
+			
+			if(getObjectId() == null || countRows() == 0) {
 				insert();
+			} else {
+				update();
 			}
 			
 			
@@ -119,8 +121,8 @@ public class JarseObject {
 			result.next();
 			rowCount = result.getInt(1);
 		} finally {
-			result.close();
 			statement.close();
+			result.close();
 		}
 		return rowCount;
 	}
@@ -231,7 +233,10 @@ public class JarseObject {
 	}
 
 	public String getObjectId() {
-		return data.get("objectId").toString();
+		if(data.containsKey("objectId"))
+			return data.get("objectId").toString();
+		else
+			return null;
 	}
 
 	public void setObjectId(String id) {

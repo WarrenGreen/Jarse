@@ -13,7 +13,8 @@ public class Test {
 	
 	public void insert() {
 		JarseObject jo = new JarseObject("test");
-		jo.put("K", "poop");
+		jo.put("K", "demo");
+
 		jo.save();
 	}
 	
@@ -33,7 +34,7 @@ public class Test {
 	
 	public void find() {
 		JarseQuery query = new JarseQuery("test");
-		//query.whereEqualTo("K", "dog");
+		query.whereEqualTo("K", "demo");
 		query.orderBy("objectId");
 		query.orderDescending();
 		List<JarseObject> result = query.find();
@@ -53,10 +54,10 @@ public class Test {
 	
 	public static void main(String[] args) {
 		Test t = new Test();
-		//t.insert();
+		t.insert();
 		//t.delete();
 		//t.get();
-		t.find();
+		//t.find();
 		//t.analytics();
 	}
 }
