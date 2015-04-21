@@ -5,11 +5,13 @@ var http = require('http');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root', 
-	password: 'password'
+	password: ''
 });
 
 var app = express(); 
 var server = http.createServer(app);
+
+app.use(express.static(__dirname + '/'));
 
 //this is just sample stuff, can be changed around if needed.
 
@@ -30,7 +32,7 @@ connection.query('CREATE DATABASE IF NOT EXISTS test', function (err) {
 // just to send our main html file at the base
 
 app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 // button to create a table from within the dashboard
@@ -47,3 +49,6 @@ app.post('/insert', function(req, res){
 app.post('/delete', function(req, res){ 
 	
 });
+
+app.listen(3000);
+console.log("Express server listening on port 3000");
