@@ -1,8 +1,4 @@
 */bin/*
 .metadata/*
 .recommenders/*
-<<<<<<< HEAD
-node_modules/
-=======
 dashboard/node_modules/
->>>>>>> origin/master
