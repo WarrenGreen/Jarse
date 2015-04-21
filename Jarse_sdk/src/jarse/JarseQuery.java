@@ -40,8 +40,9 @@ public class JarseQuery {
 	 * Get object by the objectId.
 	 * @param objectId
 	 * @return
+	 * @throws JarseException 
 	 */
-	public JarseObject get(String objectId) {
+	public JarseObject get(String objectId) throws JarseException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -55,12 +56,14 @@ public class JarseQuery {
 			String query = String.format("SELECT * FROM %s WHERE objectId = %s;", classname, objectId);
 			result = statement.executeQuery(query);
 			
-			ResultSetMetaData rsmd = result.getMetaData();
+			if(!result.next()) 
+				throw new JarseException("No object with that id.");
 			
+			ResultSetMetaData rsmd = result.getMetaData();
 			JarseObject ret = new JarseObject(classname);
 			ret.setObjectId(objectId);
 			
-			result.next();
+			//result.next();
 			for(int i=1;i<=rsmd.getColumnCount();i++){
 				ret.put(rsmd.getColumnName(i), result.getString(i));
 			}
