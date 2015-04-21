@@ -4,7 +4,7 @@
   "description": "Analytics Dashboard for our open source project, which is Java bindings for MySQL connectivity",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "node app.js"
   },
   "repository": {
     "type": "git",
