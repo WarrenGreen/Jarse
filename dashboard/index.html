@@ -29,19 +29,19 @@
 			<section class = "main-pane row"> 
 				<div class = "col-md-3"> 
 					<ul class = "sidebar"> 
-						<li id = "home">  Audience </li> 
-						<li> <button type = 'button' class = 'btn btn-primary'> View Database </button> </li> 
-						<li> <button type = 'button' class = 'btn btn-primary'> View Tables </button> </li> 
-						<li> <button type = 'button' class = 'btn btn-primary' data-toggle = 'modal' data-target = 'queryModal'> Enter Query </button> </li> 
+						<li id = "home"> <button type = 'button' class = 'btn btn-default'> Home </button> </li> 
+						<li> <button type = 'button' class = 'btn btn-default' id = "view-db"> View Database </button> </li> 
+						<li> <button type = 'button' class = 'btn btn-default'> View Tables </button> </li> 
+						<li> <button type = 'button' class = 'btn btn-default' data-toggle = 'modal' data-target = '#queryModal'> Enter Query </button> </li> 
 					</ul> 
 				</div>
 
-				<div class = "col-md-9 well">
-					<p> Here is some body text as a test. Just making sure that the layout works just fine </p>  
+				<div class = "col-md-9 well" id = "content">
+					<p class = "contentText"> Here is some body text as a test. Just making sure that the layout works just fine </p>  
 				</div>  
 			</section>
 			<section class = "modal-container">
-				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal fade" id="queryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				 	<div class="modal-dialog">
 				    	<div class="modal-content">
 				      		<div class="modal-header">
@@ -50,7 +50,7 @@
 				      		</div>
 				      		<div class="modal-body">
 								<p> Enter any valid SQL Query. For example <code> SELECT * FROM `table_name`</code>
-								<input type = "text" id = "query input"  
+								<input type = "text" id = "queryInput"/>  
 				      		</div>
 				      		<div class="modal-footer">
 				        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

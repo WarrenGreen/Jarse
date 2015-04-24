@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var http = require('http');
 
@@ -12,6 +13,8 @@ var app = express();
 var server = http.createServer(app);
 
 app.use(express.static(__dirname + '/'));
+app.use(bodyParser.json());
+
 
 //this is just sample stuff, can be changed around if needed.
 
@@ -35,20 +38,54 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-// button to create a table from within the dashboard
-app.post('/create', function(req, res){
-    console.log(req);
+// button to view all tables
+
+
+// PSEUDOCODE: var keyNames = Object.getKeys(rows[0])
+//          var tableString =            "<table>"              
+//for (var i = 0; i < rows.length; i++) { 
+
+app.post('/view', function(req, res){
+    var command = req.body.command;
+    var headerString = "<h4> List of tables in the Database </h4>";
+    var tableString = "<table>"
+    connection.query(command, function(err, rows){
+        if(err) throw err;
+        console.log(rows);
+        var keys = Object.keys(rows[0]);
+        console.log(keys);
+        for (var i = 0; i < rows.length; i++){
+            tableString += "<tr>"
+            for (var j = 0; j < keys.length; j++) { 
+                tableString += "<td>" + rows[i][keys[j]] + "</td>"
+            }
+            tableString += "</tr>"
+        }
+        tableString += "</table>"
+        res.send(headerString+tableString);
+    });
+    
 }); 
 
-// for inserting values into a given table from the dashboard.
-app.post('/insert', function(req, res){
 
+app.post('/modify', function(req, res){
+    var command = req.body.command;
+    var tableString = "<table>"
+    connection.query(command, function(err, rows){
+        if(err) throw err;
+        var keys = Object.keys(rows[0]);
+        for (var i = 0; i < rows.length; i++){
+            tableString += "<tr>"
+            for (var j = 0; j < keys.length; j++) { 
+                tableString += "<td>" + rows[i][keys[j]] + "</td>"
+            }
+            tableString += "</tr>"
+        }
+    });
+    tableString += "</table>"
+    res.send(tableString);
 }); 
 
-// for dleeting values into a given table from the dashboard. 
-app.post('/delete', function(req, res){ 
-	
-});
 
 app.listen(3000);
 console.log("Express server listening on port 3000");
