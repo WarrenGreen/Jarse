@@ -29,11 +29,10 @@
 			<section class = "main-pane row"> 
 				<div class = "col-md-3"> 
 					<ul class = "sidebar"> 
-						<li> Audience </li> 
-						<li> Events </li> 
-						<li> Data </li> 
-						<li> Performance </li> 
-						<li> Crashed </li> 
+						<li id = "home">  Audience </li> 
+						<li> <button type = 'button' class = 'btn btn-primary'> View Database </button> </li> 
+						<li> <button type = 'button' class = 'btn btn-primary'> View Tables </button> </li> 
+						<li> <button type = 'button' class = 'btn btn-primary' data-toggle = 'modal' data-target = 'queryModal'> Enter Query </button> </li> 
 					</ul> 
 				</div>
 
@@ -41,6 +40,26 @@
 					<p> Here is some body text as a test. Just making sure that the layout works just fine </p>  
 				</div>  
 			</section>
+			<section class = "modal-container">
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				 	<div class="modal-dialog">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        		<h4 class="modal-title" id="myModalLabel">Enter an SQL Query</h4>
+				      		</div>
+				      		<div class="modal-body">
+								<p> Enter any valid SQL Query. For example <code> SELECT * FROM `table_name`</code>
+								<input type = "text" id = "query input"  
+				      		</div>
+				      		<div class="modal-footer">
+				        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        		<button type="button" class="btn btn-primary" id = "query-submit"> Submit Query </button>
+				      		</div>
+				    	</div>
+				 	</div>
+				</div>
+			<section>
 		</div> 
 
 		<script type = "text/javascript" src = "./js/lib/jquery.js"></script> 
