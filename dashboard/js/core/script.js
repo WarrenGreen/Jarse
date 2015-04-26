@@ -27,8 +27,10 @@ $(document).ready(function(){
   			url: "modify",
   			data: dataResource,
   			contentType: "application/json",
-  			success: function(data){
+  			success: function(data){  				  				
+  				console.log(data);
   				$("#content").empty().append(data);
+  				$("#queryModal").modal("hide");
   			}, 
   			dataType: "HTML"
 		});

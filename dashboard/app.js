@@ -72,6 +72,7 @@ app.post('/modify', function(req, res){
     var command = req.body.command;
     var tableString = "<table>"
     connection.query(command, function(err, rows){
+        console.log(rows);
         if(err) throw err;
         var keys = Object.keys(rows[0]);
         for (var i = 0; i < rows.length; i++){
@@ -81,11 +82,27 @@ app.post('/modify', function(req, res){
             }
             tableString += "</tr>"
         }
+        tableString += "</table>"
+        res.send(tableString);
     });
-    tableString += "</table>"
-    res.send(tableString);
 }); 
 
+var showAll = function(tableName) { 
+    connection.query("SELECT * FROM " + tableName, function(err, rows){
+        if (err) return "<h2 class = 'error'> Not a valid SQL query! </h2>";
+        var keys = Object.keys(rows[0]);
+        var tableString = "<table>";
+        for (var i = 0; i < rows.length; i++) { 
+            tableString += "<tr>";
+            for (var j = 0; j < keys.length; j++) { 
+                tableString += "<td>" + rows[i][keys[j]] + "</td>";
+            }
+            tableString += "</tr>";
+        }
+        tableString += "</table>";
+        return tableString;
+    });
+}
 
 app.listen(3000);
 console.log("Express server listening on port 3000");
