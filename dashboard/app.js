@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var http = require('http');
+var q = require('q');
 
 var connection = mysql.createConnection({
 	host: 'localhost',
@@ -48,7 +49,7 @@ app.get('/', function(req, res) {
 app.post('/view', function(req, res){
     var command = req.body.command;
     var headerString = "<h4> List of tables in the Database </h4>";
-    var tableString = "<table>"
+    var tableString = "<table class = 'table-bordered'>"
     connection.query(command, function(err, rows){
         if(err) throw err;
         console.log(rows);
@@ -70,39 +71,47 @@ app.post('/view', function(req, res){
 
 app.post('/modify', function(req, res){
     var command = req.body.command;
-    var tableString = "<table>"
-    connection.query(command, function(err, rows){
-        console.log(rows);
-        if(err) throw err;
-        var keys = Object.keys(rows[0]);
-        for (var i = 0; i < rows.length; i++){
-            tableString += "<tr>"
-            for (var j = 0; j < keys.length; j++) { 
-                tableString += "<td>" + rows[i][keys[j]] + "</td>"
-            }
-            tableString += "</tr>"
-        }
-        tableString += "</table>"
-        res.send(tableString);
+    console.log(command);
+    connection.query(command, function(err, response){
+        console.log(response);
+        if(err) res.send("<h2 class = 'error'> Not a valid SQL query! </h2");
+        res.send("<h3> Query successful! Number of affected rows " + response.affectedRows + "</h3>");
     });
-}); 
+});
 
-var showAll = function(tableName) { 
+var showAll = function(tableName, deferred, res) { 
+    var tableString = "<table>";
     connection.query("SELECT * FROM " + tableName, function(err, rows){
-        if (err) return "<h2 class = 'error'> Not a valid SQL query! </h2>";
+        if (err){
+           res.send("<h2 class = 'error'> Not a valid SQL query! </h2>");
+           return;  
+        } 
+        deferred.resolve(rows);
+    }); 
+
+    return deferred.promise;
+} 
+
+
+app.post('/tables', function(req, res){
+    defer = q.defer();
+    var tableString = "<table class = 'table-bordered'>";
+    showAll("customers", defer, res).then(function(rows){
         var keys = Object.keys(rows[0]);
-        var tableString = "<table>";
+        tableString += "<tr>"; 
+        for (var i = 0; i < keys.length; i++) { 
+            tableString += "<th>" + keys[i] + "</th>";
+        }
+        tableString += "</tr>";
         for (var i = 0; i < rows.length; i++) { 
             tableString += "<tr>";
-            for (var j = 0; j < keys.length; j++) { 
+            for (var j = 0; j < keys.length; j++) {
                 tableString += "<td>" + rows[i][keys[j]] + "</td>";
             }
-            tableString += "</tr>";
         }
-        tableString += "</table>";
-        return tableString;
+        res.send(tableString);
     });
-}
+});
 
 app.listen(3000);
 console.log("Express server listening on port 3000");
