@@ -49,7 +49,7 @@ app.get('/', function(req, res) {
 app.post('/view', function(req, res){
     var command = req.body.command;
     var headerString = "<h4> List of tables in the Database </h4>";
-    var tableString = "<table class = 'table-bordered'>"
+    var tableString = "<table class = 'table'>"
     connection.query(command, function(err, rows){
         if(err) throw err;
         console.log(rows);
@@ -94,23 +94,42 @@ var showAll = function(tableName, deferred, res) {
 
 
 app.post('/tables', function(req, res){
-    defer = q.defer();
-    var tableString = "<table class = 'table-bordered'>";
-    showAll("customers", defer, res).then(function(rows){
-        var keys = Object.keys(rows[0]);
-        tableString += "<tr>"; 
-        for (var i = 0; i < keys.length; i++) { 
-            tableString += "<th>" + keys[i] + "</th>";
+    var tables = req.body.command;
+    var resultHtml = "";
+    var pending = tables.length; 
+
+    (function increment(x){
+        if (x === pending) { 
+            res.send(resultHtml);
+            return;
         }
-        tableString += "</tr>";
-        for (var i = 0; i < rows.length; i++) { 
-            tableString += "<tr>";
-            for (var j = 0; j < keys.length; j++) {
-                tableString += "<td>" + rows[i][keys[j]] + "</td>";
+        console.log(x);
+        console.log(pending);
+
+        var defer = q.defer();
+        var table = tables[x];
+        var tableString = "<table class = 'table'>";
+        
+        showAll(table, defer, res).then(function(rows){
+            var keys = Object.keys(rows[0]);
+            tableString += "<tr>"; 
+            for (var i = 0; i < keys.length; i++) { 
+                tableString += "<th>" + keys[i] + "</th>";
             }
-        }
-        res.send(tableString);
-    });
+            tableString += "</tr>";
+            for (var i = 0; i < rows.length; i++) { 
+                tableString += "<tr>";
+                for (var j = 0; j < keys.length; j++) {
+                    tableString += "<td>" + rows[i][keys[j]] + "</td>";
+                }
+            }
+            tableString += "</table>";
+            resultHtml+= "<h4>" + table + "</h4>" + tableString;
+            console.log(resultHtml);
+            increment(x+1);
+        });
+
+    })(0)   
 });
 
 app.listen(3000);

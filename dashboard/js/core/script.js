@@ -13,7 +13,7 @@ var showTables = function(){
 		}, 
 		dataType: "HTML"
 	});
-}
+};
 
 
 var populateModal = function(data){ 
@@ -21,7 +21,18 @@ var populateModal = function(data){
 	$(tds).each(function(i){
 		$(".inputSelects").append("<label> <input type = 'checkbox'/> " + $(this).text() + " </label>");
 	});
-}
+};
+
+var getCheckedInputs = function(){ 
+	var inputs = [];
+	var labels = $(".inputSelects > label"); 
+	var checkboxes = $("input:checked");
+	$(checkboxes).each(function(i){
+		inputs.push($.trim($(this).parent().text()));
+	});
+	console.log(inputs);
+	return inputs;
+};
 
 $(document).ready(function(){
 	showTables();
@@ -65,7 +76,8 @@ $("#query-submit").on('click', function(){
 });
 
 $("#table-submit").on('click', function(){
-	var query = JSON.stringify({command: 'SHOW TABLES FROM test'});
+	var checked = getCheckedInputs();
+	var query = JSON.stringify({command: checked});
 	$.ajax({
 		type: "POST",
 		url: "tables",
